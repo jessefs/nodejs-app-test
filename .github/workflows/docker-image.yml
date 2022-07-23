@@ -46,8 +46,8 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        context: ./app1/container
-        file: ./app1/container/Dockerfile
+        context: ./
+        file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app1:${{ steps.buildnumber.outputs.build_number }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/nodeJSAppTest:${{ steps.buildnumber.outputs.build_number }}
     
