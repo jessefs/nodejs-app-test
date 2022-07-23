@@ -49,5 +49,5 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodeJsapp:${{ steps.buildnumber.outputs.build_number }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{ steps.buildnumber.outputs.build_number }}
     
