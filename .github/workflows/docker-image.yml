@@ -51,33 +51,16 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{ steps.buildnumber.outputs.build_number }}
     
-    # - name: Update version
-    #   if : github.event_name == 'pull_request'
-    #   run: |
-    #       tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
-    #       sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
+    - name: Update version
+      if : github.event_name == 'pull_request'
+      run: |
+          tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
+          sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
           
-    # - name: Commit and push changes
-    #   if : github.event_name == 'pull_request'
-    #   uses: devops-infra/action-commit-push@master
-    #   with:
-    #     github_token: ${{ secrets.github_token }}
-    #     commit_message: Version updated
-  change-and-push:
-    needs: container
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Update version
-        if : github.event_name == 'pull_request'
-        run: |
-            tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
-            sed -i "s/$tag/${{ container.steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
-
-      - name: Commit and push changes
-        uses: devops-infra/action-commit-push@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit_message: Replaced foo with bar
+    - name: Commit and push changes
+      if : github.event_name == 'pull_request'
+      uses: devops-infra/action-commit-push@master
+      with:
+        github_token: ${{ secrets.github_token }}
+        commit_message: Version updated
+        target_branch: ${{ github.event.pull_request.base.ref }}
