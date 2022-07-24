@@ -49,13 +49,13 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${git rev-parse --short HEAD}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{git rev-parse --short HEAD}}
     
     - name: Update version
       if : github.event_name == 'pull_request'
       run: |
           tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
-          sed -i "s/$tag/$GITHUB_SHA" ./charts/helm-example/values.yaml
+          sed -i "s/$tag/${{git rev-parse --short HEAD}}" ./charts/helm-example/values.yaml
           
     - name: Commit and push changes
       if : github.event_name == 'pull_request'
