@@ -63,8 +63,8 @@ jobs:
     - name: Update version
       #if : github.event_name == 'pull_request'
       run: |
-          tag=$(cat ./dockernode/values.yaml | grep tag: | awk '{print $2}')
-          sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./dockernode/values.yaml
+          tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
+          sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
 
     - name: Commit and push changes
       # if : github.event_name == 'pull_request'
