@@ -59,7 +59,7 @@ jobs:
           
     - name: Commit and push changes
       if : github.event_name == 'pull_request'
-      uses: devops-infra/action-commit-push@v0.3
+      uses: devops-infra/action-commit-push@master
       with:
         github_token: ${{ secrets.github_token }}
         commit_message: Version updated
