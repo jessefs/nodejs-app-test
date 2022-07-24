@@ -49,7 +49,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{"GITHUB_SHA"}}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${GITHUB_SHA}
     
     - name: Update version
       if : github.event_name == 'pull_request'
