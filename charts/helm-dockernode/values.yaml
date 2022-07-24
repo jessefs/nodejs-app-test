@@ -9,7 +9,7 @@ image:
   repository: jessefs18/nodejsapp
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 33
+  tag: 35
 
 imagePullSecrets: []
 nameOverride: ""
