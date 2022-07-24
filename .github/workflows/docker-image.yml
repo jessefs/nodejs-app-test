@@ -1,8 +1,8 @@
 name: NodeJS App Actions
 
 on:
-  push:
-    branches: [ "main" ]
+  # push:
+  #   branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -63,5 +63,5 @@ jobs:
       with:
         github_token: ${{ secrets.github_token }}
         commit_message: Version updated
-        target_branch: ${{ github.event.pull_request.head.ref }}
+        target_branch: ${{ github.event.pull_request.base.ref }}
         force: true
