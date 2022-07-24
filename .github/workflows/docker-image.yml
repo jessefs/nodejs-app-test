@@ -46,8 +46,20 @@ jobs:
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        context: ./app1/container
-        file: ./app1/container/Dockerfile
+        context: .
+        file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/app1:${{ steps.buildnumber.outputs.build_number }}
+        tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{ steps.buildnumber.outputs.build_number }}
     
+    - name: Update version
+      if : github.event_name == 'pull_request'
+      run: |
+          tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
+          sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
+          
+    - name: Commit and push changes
+      if : github.event_name == 'pull_request'
+      uses: devops-infra/action-commit-push@v0.3
+      with:
+        github_token: ${{ secrets.github_token }}
+        commit_message: Version updated
