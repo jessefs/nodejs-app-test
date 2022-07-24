@@ -51,12 +51,21 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{ steps.buildnumber.outputs.build_number }}
     
+    
+          
+    
+    - name: Checkout tools repo
+      uses: actions/checkout@v3
+      with:
+        repository: jessefs18/helm-infra
+        path: dockernode
+    
     - name: Update version
       if : github.event_name == 'pull_request'
       run: |
-          tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
-          sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
-          
+          tag=$(cat ./values.yaml | grep tag: | awk '{print $2}')
+          sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./values.yaml
+
     - name: Commit and push changes
       if : github.event_name == 'pull_request'
       uses: devops-infra/action-commit-push@master
