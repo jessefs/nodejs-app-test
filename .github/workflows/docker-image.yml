@@ -74,7 +74,7 @@ jobs:
         if : github.event_name == 'pull_request'
         run: |
             tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
-            sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
+            sed -i "s/$tag/${{ container.steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
 
       - name: Commit and push changes
         uses: devops-infra/action-commit-push@master
