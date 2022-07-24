@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dockernode.fullname" . }}
+  labels:
+    {{- include "dockernode.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 3000
+      protocol: TCP
+      name: nodeapp
+  selector:
+    {{- include "dockernode.selectorLabels" . | nindent 4 }}
