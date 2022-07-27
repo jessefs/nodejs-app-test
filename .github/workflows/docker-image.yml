@@ -3,8 +3,6 @@ name: NodeJS App Actions
 on:
   push:
     branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
 
 jobs:
 
@@ -25,23 +23,19 @@ jobs:
         token: ${{secrets.github_token}}
     
     - name: Check Out Repo 
-      # if: github.event_name == 'pull_request'
       uses: actions/checkout@v2
     
     - name: Login to Docker Hub
-      # if: github.event_name == 'pull_request'
       uses: docker/login-action@v1
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         
     - name: Set up Docker Buildx
-      # if: github.event_name == 'pull_request'
       id: buildx
       uses: docker/setup-buildx-action@v1
     
     - name: Build and push
-      # if: github.event_name == 'pull_request'
       id: docker_build
       uses: docker/build-push-action@v2
       with:
@@ -49,27 +43,15 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/nodejsapp:${{ steps.buildnumber.outputs.build_number }}
-    
-    
-          
-    
-    # - name: Checkout tools repo
-    #   uses: actions/checkout@v3
-    #   with:
-    #     repository: jessefs/helm-infra
-    #     ref: main
+
     
     - name: Update version
-      # if : github.event_name == 'push'
       run: |
           tag=$(cat ./charts/helm-dockernode/values.yaml | grep tag: | awk '{print $2}')
           sed -i "s/$tag/${{ steps.buildnumber.outputs.build_number }}/" ./charts/helm-dockernode/values.yaml
 
     - name: Commit and push changes
-      # if : github.event_name == 'push'
       uses: devops-infra/action-commit-push@master
       with:
         github_token: ${{ secrets.github_token }}
         commit_message: Version updated
-        #target_branch: ${{ github.event.pull_request.base.ref }}
-        #force: true
